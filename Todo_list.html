@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #1e1e2f;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #ffffff;
+      }
+
+      .container {
+        background-color: #2c2c3e;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.4);
+        width: 400px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #4caf50;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+
+      form {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      input[type="text"] {
+        flex-grow: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        background-color: #3d3d50;
+        color: white;
+        margin-right: 10px;
+      }
+
+      input[type="submit"] {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #43a047;
+      }
+
+      ol {
+        list-style-type: decimal;
+        padding-left: 20px;
+        color: #bbbbbb;
+      }
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #444455;
+      }
+
+      span.task-text.done {
+        text-decoration: line-through;
+        color: #a8a8a8;
+      }
+
+      .delete {
+        background-color: #43a047;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .delete:hover {
+        background-color: #388e3c;
+      }
+
+      .checkbox {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #4caf50;
+        border-radius: 5px;
+        margin-right: 10px;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .checkbox:checked::before {
+        content: '✔';
+        color: white;
+        font-size: 16px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      #complete-all {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+      }
+
+      #complete-all:hover {
+        background-color: #43a047;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Todo List</h1>
+      <form id="new-task">
+        <input id="task" type="text" placeholder="Nueva tarea" autocomplete="off" autofocus />
+        <input type="submit" value="Añadir" />
+      </form>
+      <ol id="tasks"></ol>
+      <button id="complete-all">Complete All</button>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const taskForm = document.querySelector('#new-task');
+        const taskInput = document.querySelector('#task');
+        const taskList = document.querySelector('#tasks');
+        const completeAllButton = document.querySelector('#complete-all');
+
+        taskForm.onsubmit = (e) => {
+          e.preventDefault();
+
+          const taskText = taskInput.value.trim();
+          if (taskText === '') return;
+
+          const li = document.createElement('li');
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.classList.add('checkbox');
+
+          const taskSpan = document.createElement('span');
+          taskSpan.classList.add('task-text');
+          taskSpan.textContent = taskText;
+
+          checkbox.onchange = function () {
+            if (checkbox.checked) {
+              taskSpan.classList.add('done');
+            } else {
+              taskSpan.classList.remove('done');
+            }
+          };
+
+          const deleteButton = document.createElement('button');
+          deleteButton.innerHTML = 'X';
+          deleteButton.classList.add('delete');
+
+          deleteButton.onclick = function () {
+            taskList.removeChild(li);
+          };
+
+          li.appendChild(checkbox);
+          li.appendChild(taskSpan);
+          li.appendChild(deleteButton);
+          taskList.appendChild(li);
+
+          taskInput.value = '';
+        };
+
+        completeAllButton.onclick = () => {
+          const tasks = taskList.querySelectorAll('li');
+          tasks.forEach((task) => {
+            const checkbox = task.querySelector('.checkbox');
+            const taskSpan = task.querySelector('.task-text');
+            checkbox.checked = true;
+            taskSpan.classList.add('done');
+          });
+        };
+      });
+    </script>
+  </body>
+</html>
